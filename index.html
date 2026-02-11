@@ -1,0 +1,883 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>MyStreme – Set-Up</title>
+  <style>
+    :root{
+      --bg:#06080b;
+      --panel: rgba(255,255,255,0.05);
+      --panel2: rgba(255,255,255,0.035);
+      --stroke: rgba(255,255,255,0.10);
+      --stroke2: rgba(255,255,255,0.14);
+      --text: rgba(255,255,255,0.92);
+      --muted: rgba(255,255,255,0.62);
+      --muted2: rgba(255,255,255,0.46);
+      --accent:#29c7ff;
+      --accent2:#1aa8ff;
+      --danger:#ff4d6d;
+      --ok:#2cff9f;
+      --shadow: 0 18px 40px rgba(0,0,0,0.55);
+      --radius: 18px;
+      --radius2: 26px;
+    }
+
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      color:var(--text);
+      background:
+        radial-gradient(1200px 900px at 75% 15%, rgba(41,199,255,0.12), transparent 55%),
+        radial-gradient(900px 700px at 10% 85%, rgba(41,199,255,0.10), transparent 50%),
+        linear-gradient(180deg, #04060a 0%, #06080b 55%, #030508 100%);
+      overflow-x:hidden;
+    }
+
+    /* Safe area for iPhone notch/home indicator */
+    .safe{
+      padding-top: max(18px, env(safe-area-inset-top));
+      padding-bottom: max(18px, env(safe-area-inset-bottom));
+      padding-left: max(16px, env(safe-area-inset-left));
+      padding-right: max(16px, env(safe-area-inset-right));
+      min-height: 100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .wrap{
+      width: min(520px, 100%);
+      margin: 0 auto;
+    }
+
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03));
+      border: 1px solid var(--stroke);
+      border-radius: var(--radius2);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      position:relative;
+    }
+
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding: 14px 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      background: rgba(0,0,0,0.18);
+      backdrop-filter: blur(10px);
+    }
+    .steps{
+      font-size: 13px;
+      letter-spacing: 0.2px;
+      color: var(--muted);
+    }
+    .steps b{ color: var(--accent); font-weight: 650; }
+
+    .progress{
+      height: 6px;
+      width: 120px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 999px;
+      overflow:hidden;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .bar{
+      height:100%;
+      width:25%;
+      background: linear-gradient(90deg, var(--accent), rgba(41,199,255,0.55));
+      border-radius: 999px;
+      transition: width .25s ease;
+    }
+
+    .content{
+      padding: 18px 16px 16px;
+    }
+
+    .logo{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding-top: 8px;
+      padding-bottom: 10px;
+    }
+    .logo img{
+      width: 180px;
+      max-width: 58vw;
+      height: auto;
+      filter: drop-shadow(0 10px 22px rgba(41,199,255,0.22));
+      opacity: 0.98;
+    }
+
+    h1{
+      margin: 2px 0 6px;
+      font-size: 22px;
+      font-weight: 750;
+      letter-spacing: 0.2px;
+    }
+    p{
+      margin: 0 0 14px;
+      color: var(--muted);
+      line-height: 1.35;
+      font-size: 14px;
+    }
+
+    .field{
+      margin: 12px 0;
+    }
+    .label{
+      display:flex;
+      justify-content:space-between;
+      align-items:baseline;
+      margin-bottom: 8px;
+      color: rgba(255,255,255,0.80);
+      font-size: 13px;
+      letter-spacing: 0.2px;
+    }
+    .hint{
+      font-size: 12px;
+      color: var(--muted2);
+    }
+    input[type="email"], input[type="password"]{
+      width:100%;
+      padding: 14px 14px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(0,0,0,0.30);
+      color: var(--text);
+      outline:none;
+      font-size: 16px; /* prevent iOS zoom */
+    }
+    input[type="email"]:focus, input[type="password"]:focus{
+      border-color: rgba(41,199,255,0.55);
+      box-shadow: 0 0 0 4px rgba(41,199,255,0.10);
+    }
+
+    .seg{
+      display:flex;
+      gap: 10px;
+      flex-wrap:wrap;
+    }
+    .chip{
+      position:relative;
+      flex: 1 1 auto;
+      min-width: 92px;
+    }
+    .chip input{ position:absolute; opacity:0; pointer-events:none; }
+    .chip label{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap: 10px;
+      padding: 12px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(255,255,255,0.03);
+      color: rgba(255,255,255,0.88);
+      cursor:pointer;
+      user-select:none;
+      transition: transform .06s ease, border-color .2s ease, background .2s ease;
+      min-height: 44px; /* good tap target */
+      font-weight: 620;
+      letter-spacing: 0.15px;
+    }
+    .chip label:active{ transform: scale(0.99); }
+    .chip input:checked + label{
+      border-color: rgba(41,199,255,0.65);
+      background: rgba(41,199,255,0.12);
+      box-shadow: 0 0 0 4px rgba(41,199,255,0.10);
+      color: rgba(255,255,255,0.95);
+    }
+
+    .actions{
+      display:flex;
+      gap: 12px;
+      margin-top: 14px;
+    }
+    .btn{
+      width:100%;
+      padding: 14px 16px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.05);
+      color: rgba(255,255,255,0.88);
+      font-weight: 700;
+      letter-spacing: 0.25px;
+      cursor:pointer;
+      min-height: 48px;
+      transition: transform .06s ease, background .2s ease, border-color .2s ease;
+    }
+    .btn:active{ transform: scale(0.99); }
+    .btn.primary{
+      background: linear-gradient(180deg, rgba(41,199,255,0.22), rgba(41,199,255,0.10));
+      border-color: rgba(41,199,255,0.45);
+      color: rgba(255,255,255,0.96);
+    }
+    .btn.primary:hover{
+      border-color: rgba(41,199,255,0.65);
+    }
+    .btn.link{
+      background: transparent;
+      border-color: rgba(255,255,255,0.10);
+      color: rgba(255,255,255,0.82);
+    }
+
+    .error{
+      margin-top: 10px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,77,109,0.35);
+      background: rgba(255,77,109,0.12);
+      color: rgba(255,255,255,0.90);
+      font-size: 13px;
+      display:none;
+    }
+
+    /* Likes/Dislikes */
+    .ldHeader{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom: 10px;
+    }
+    .pillNote{
+      font-size: 12px;
+      color: rgba(255,255,255,0.78);
+      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.03);
+      padding: 8px 10px;
+      border-radius: 999px;
+      white-space:nowrap;
+    }
+
+    .listArea{
+      margin-top: 10px;
+      display:flex;
+      flex-direction:column;
+      gap: 10px;
+    }
+
+    .genreCard{
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.03);
+      border-radius: var(--radius);
+      padding: 12px 12px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 10px;
+      min-height: 56px;
+    }
+
+    .gName{
+      font-weight: 720;
+      letter-spacing: 0.2px;
+    }
+
+    .toggles{
+      display:flex;
+      gap: 8px;
+      flex-shrink:0;
+    }
+
+    .tbtn{
+      width: 46px;
+      height: 40px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(0,0,0,0.25);
+      color: rgba(255,255,255,0.78);
+      font-size: 18px;
+      font-weight: 800;
+      cursor:pointer;
+      transition: transform .06s ease, background .2s ease, border-color .2s ease, color .2s ease;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      user-select:none;
+    }
+    .tbtn:active{ transform: scale(0.99); }
+
+    .tbtn.like.on{
+      border-color: rgba(44,255,159,0.55);
+      background: rgba(44,255,159,0.12);
+      color: rgba(255,255,255,0.95);
+      box-shadow: 0 0 0 4px rgba(44,255,159,0.08);
+    }
+    .tbtn.dislike.on{
+      border-color: rgba(255,77,109,0.55);
+      background: rgba(255,77,109,0.12);
+      color: rgba(255,255,255,0.95);
+      box-shadow: 0 0 0 4px rgba(255,77,109,0.08);
+    }
+
+    .subRow{
+      margin-top: 12px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 12px;
+    }
+    .showMore{
+      color: rgba(41,199,255,0.92);
+      font-weight: 750;
+      cursor:pointer;
+      user-select:none;
+      padding: 10px 0;
+    }
+    .countNote{
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    /* 2-up mode for UNSELECTED items (selected stay 1-up above) */
+    .grid2{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .genreTile{
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.03);
+      border-radius: var(--radius);
+      padding: 10px 10px;
+      display:flex;
+      flex-direction:column;
+      gap: 8px;
+      min-height: 90px;
+      justify-content:space-between;
+    }
+    .genreTile .gName{ font-size: 14px; }
+    .genreTile .toggles{ justify-content:flex-end; }
+
+    /* Tolerance radios */
+    .radioStack{
+      display:flex;
+      flex-direction:column;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .radioItem{
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.03);
+      border-radius: var(--radius);
+      padding: 12px 12px;
+      display:flex;
+      align-items:flex-start;
+      gap: 12px;
+      cursor:pointer;
+    }
+    .dot{
+      width: 18px;
+      height: 18px;
+      border-radius: 999px;
+      border: 2px solid rgba(255,255,255,0.35);
+      margin-top: 3px;
+      flex-shrink:0;
+      position:relative;
+    }
+    .dot::after{
+      content:"";
+      position:absolute;
+      inset: 3px;
+      border-radius:999px;
+      background: transparent;
+    }
+    .radioItem.on{
+      border-color: rgba(41,199,255,0.55);
+      background: rgba(41,199,255,0.10);
+      box-shadow: 0 0 0 4px rgba(41,199,255,0.08);
+    }
+    .radioItem.on .dot{
+      border-color: rgba(41,199,255,0.75);
+    }
+    .radioItem.on .dot::after{
+      background: rgba(41,199,255,0.95);
+    }
+    .rText b{
+      display:block;
+      font-weight: 780;
+      margin-bottom: 2px;
+    }
+    .rText span{
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.25;
+    }
+
+    /* Success page */
+    .success{
+      text-align:center;
+      padding: 6px 4px 0;
+    }
+    .check{
+      width: 62px;
+      height: 62px;
+      border-radius: 999px;
+      border: 1px solid rgba(44,255,159,0.35);
+      background: rgba(44,255,159,0.10);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      margin: 8px auto 10px;
+      box-shadow: 0 0 0 6px rgba(44,255,159,0.06);
+      font-size: 28px;
+    }
+
+    /* Utility */
+    .hidden{ display:none !important; }
+    .divider{
+      height:1px;
+      background: rgba(255,255,255,0.08);
+      margin: 12px 0;
+    }
+
+    @media (max-width: 360px){
+      .progress{ width: 96px; }
+      .tbtn{ width: 44px; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="safe">
+    <div class="wrap">
+      <div class="card">
+        <div class="topbar">
+          <div class="steps"><b id="stepName">Welcome</b> <span id="stepSub">Step 1 of 4</span></div>
+          <div class="progress" aria-hidden="true"><div class="bar" id="bar"></div></div>
+        </div>
+
+        <div class="content">
+
+          <!-- PAGE 1 -->
+          <section id="page1">
+            <div class="logo">
+              <!-- Put MyStreme Logo.png in same folder OR change src -->
+              <img src="MyStreme Logo.png" alt="MyStreme Logo" />
+            </div>
+            <h1>Welcome to MyStreme.</h1>
+            <p>Please create your account:</p>
+
+            <div class="field">
+              <div class="label"><span>EMAIL</span></div>
+              <input id="email" type="email" inputmode="email" autocomplete="email" placeholder="you@example.com" />
+            </div>
+
+            <div class="field">
+              <div class="label"><span>PASSWORD</span><span class="hint">8+ characters recommended</span></div>
+              <input id="password" type="password" autocomplete="new-password" placeholder="Create a password" />
+            </div>
+
+            <div class="field">
+              <div class="label"><span>Gender</span></div>
+              <div class="seg" role="radiogroup" aria-label="Gender">
+                <div class="chip">
+                  <input type="radio" name="gender" id="gM" value="M" />
+                  <label for="gM">M</label>
+                </div>
+                <div class="chip">
+                  <input type="radio" name="gender" id="gF" value="F" />
+                  <label for="gF">F</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="field">
+              <div class="label"><span>Age</span></div>
+              <div class="seg" role="radiogroup" aria-label="Age Range">
+                <div class="chip">
+                  <input type="radio" name="age" id="a1" value="13-29" />
+                  <label for="a1">13-29</label>
+                </div>
+                <div class="chip">
+                  <input type="radio" name="age" id="a2" value="30-55" />
+                  <label for="a2">30-55</label>
+                </div>
+                <div class="chip">
+                  <input type="radio" name="age" id="a3" value="56+" />
+                  <label for="a3">56+</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="error" id="err1"></div>
+
+            <div class="actions">
+              <button class="btn primary" id="next1">NEXT</button>
+            </div>
+          </section>
+
+          <!-- PAGE 2 -->
+          <section id="page2" class="hidden">
+            <div class="ldHeader">
+              <div>
+                <h1>Likes and Dislikes</h1>
+                <p>Please select 3 or more:</p>
+              </div>
+              <div class="pillNote">👍 Like &nbsp;|&nbsp; 👎 Dislike</div>
+            </div>
+
+            <div id="selectedArea" class="listArea"></div>
+
+            <div class="divider"></div>
+
+            <div id="unselectedArea" class="listArea"></div>
+
+            <div class="subRow">
+              <div class="showMore" id="showMore">Show More...</div>
+              <div class="countNote"><span id="count">0</span> selected</div>
+            </div>
+
+            <div class="error" id="err2"></div>
+
+            <div class="actions">
+              <button class="btn link" id="back2">BACK</button>
+              <button class="btn primary" id="next2">NEXT</button>
+            </div>
+          </section>
+
+          <!-- PAGE 4 -->
+          <section id="page4" class="hidden">
+            <h1>What’s your tolerance for graphic language, violence, and sex?</h1>
+
+            <div class="radioStack" id="tolStack">
+              <div class="radioItem" data-value="Low">
+                <div class="dot"></div>
+                <div class="rText">
+                  <b>Low</b>
+                  <span>avoid it</span>
+                </div>
+              </div>
+
+              <div class="radioItem" data-value="Medium">
+                <div class="dot"></div>
+                <div class="rText">
+                  <b>Medium</b>
+                  <span>some okay, but not extreme</span>
+                </div>
+              </div>
+
+              <div class="radioItem" data-value="High">
+                <div class="dot"></div>
+                <div class="rText">
+                  <b>High</b>
+                  <span>anything goes</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="error" id="err4"></div>
+
+            <div class="actions">
+              <button class="btn link" id="back4">BACK</button>
+              <button class="btn primary" id="finish">FINISH</button>
+            </div>
+          </section>
+
+          <!-- PAGE 5 -->
+          <section id="page5" class="hidden">
+            <div class="success">
+              <div class="check">✓</div>
+              <h1>Your MyStreme account is set up!</h1>
+              <p>You can edit your info and preferences in Settings.</p>
+            </div>
+
+            <div class="actions" style="flex-direction:column;">
+              <button class="btn primary" id="launch">LAUNCH MYSTREME</button>
+              <button class="btn" id="tour">GIVE ME A TOUR OF MYSTREME</button>
+            </div>
+          </section>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ---------- Data ----------
+    const initialGenres = [
+      "Action/Adventure","Comedy","Documentary","Horror","Reality TV",
+      "Sci-Fi/Fantasy","Romance","Thriller/Mystery","Kids/Family"
+    ];
+
+    const moreGenres = [
+      "Stand Up Comedy","LGBQT","Sports","Faith","Musical",
+      "Crime","International","Classics","War","Western","Anime"
+    ];
+
+    // state: 0 none, 1 like, -1 dislike
+    const state = new Map();
+    [...initialGenres, ...moreGenres].forEach(g => state.set(g, 0));
+
+    let expanded = false;
+    let tolerance = null;
+
+    // ---------- Elements ----------
+    const page1 = document.getElementById("page1");
+    const page2 = document.getElementById("page2");
+    const page4 = document.getElementById("page4");
+    const page5 = document.getElementById("page5");
+
+    const stepName = document.getElementById("stepName");
+    const stepSub  = document.getElementById("stepSub");
+    const bar      = document.getElementById("bar");
+
+    const err1 = document.getElementById("err1");
+    const err2 = document.getElementById("err2");
+    const err4 = document.getElementById("err4");
+
+    const selectedArea = document.getElementById("selectedArea");
+    const unselectedArea = document.getElementById("unselectedArea");
+    const showMore = document.getElementById("showMore");
+    const countEl = document.getElementById("count");
+
+    // ---------- Helpers ----------
+    function showError(el, msg){
+      el.textContent = msg;
+      el.style.display = "block";
+    }
+    function clearError(el){
+      el.textContent = "";
+      el.style.display = "none";
+    }
+
+    function selectedCount(){
+      let c = 0;
+      for (const v of state.values()) if (v !== 0) c++;
+      return c;
+    }
+
+    function setStep(title, n, total){
+      stepName.textContent = title;
+      stepSub.textContent = `Step ${n} of ${total}`;
+      bar.style.width = `${(n/total)*100}%`;
+    }
+
+    function goTo(which){
+      [page1,page2,page4,page5].forEach(p => p.classList.add("hidden"));
+      which.classList.remove("hidden");
+
+      if (which === page1) setStep("Welcome", 1, 4);
+      if (which === page2) setStep("Preferences", 2, 4);
+      if (which === page4) setStep("Boundaries", 3, 4);
+      if (which === page5) setStep("Done", 4, 4);
+
+      // scroll to top of card on mobile
+      window.scrollTo({top:0, behavior:"smooth"});
+    }
+
+    function genreCardFull(name){
+      const wrap = document.createElement("div");
+      wrap.className = "genreCard";
+      wrap.innerHTML = `
+        <div class="gName">${name}</div>
+        <div class="toggles">
+          <button class="tbtn like" aria-label="Like ${name}" title="Like">👍</button>
+          <button class="tbtn dislike" aria-label="Dislike ${name}" title="Dislike">👎</button>
+        </div>
+      `;
+      const likeBtn = wrap.querySelector(".like");
+      const dislikeBtn = wrap.querySelector(".dislike");
+
+      function sync(){
+        const v = state.get(name);
+        likeBtn.classList.toggle("on", v === 1);
+        dislikeBtn.classList.toggle("on", v === -1);
+      }
+
+      likeBtn.addEventListener("click", () => {
+        const v = state.get(name);
+        state.set(name, v === 1 ? 0 : 1);
+        renderGenres();
+      });
+      dislikeBtn.addEventListener("click", () => {
+        const v = state.get(name);
+        state.set(name, v === -1 ? 0 : -1);
+        renderGenres();
+      });
+
+      sync();
+      return wrap;
+    }
+
+    function genreTile2up(name){
+      const tile = document.createElement("div");
+      tile.className = "genreTile";
+      tile.innerHTML = `
+        <div class="gName">${name}</div>
+        <div class="toggles">
+          <button class="tbtn like" aria-label="Like ${name}" title="Like">👍</button>
+          <button class="tbtn dislike" aria-label="Dislike ${name}" title="Dislike">👎</button>
+        </div>
+      `;
+      const likeBtn = tile.querySelector(".like");
+      const dislikeBtn = tile.querySelector(".dislike");
+
+      function sync(){
+        const v = state.get(name);
+        likeBtn.classList.toggle("on", v === 1);
+        dislikeBtn.classList.toggle("on", v === -1);
+      }
+
+      likeBtn.addEventListener("click", () => {
+        const v = state.get(name);
+        state.set(name, v === 1 ? 0 : 1);
+        renderGenres();
+      });
+      dislikeBtn.addEventListener("click", () => {
+        const v = state.get(name);
+        state.set(name, v === -1 ? 0 : -1);
+        renderGenres();
+      });
+
+      sync();
+      return tile;
+    }
+
+    function renderGenres(){
+      clearError(err2);
+
+      const allVisible = expanded ? [...initialGenres, ...moreGenres] : [...initialGenres];
+
+      // selected first (1-up)
+      selectedArea.innerHTML = "";
+      const selected = allVisible.filter(g => state.get(g) !== 0);
+
+      if (selected.length > 0){
+        selected.forEach(g => selectedArea.appendChild(genreCardFull(g)));
+      } else {
+        // subtle placeholder spacing
+        selectedArea.innerHTML = `<div style="color:rgba(255,255,255,0.35); font-size:13px; padding:6px 2px;">
+          Tap 👍 or 👎 to set your preferences.
+        </div>`;
+      }
+
+      // unselected area:
+      unselectedArea.innerHTML = "";
+
+      const unselected = allVisible.filter(g => state.get(g) === 0);
+
+      if (!expanded){
+        // 1-up list for initial view
+        unselected.forEach(g => unselectedArea.appendChild(genreCardFull(g)));
+      } else {
+        // 2-up grid for unselected, per your mockup requirement
+        const grid = document.createElement("div");
+        grid.className = "grid2";
+        unselected.forEach(g => grid.appendChild(genreTile2up(g)));
+        unselectedArea.appendChild(grid);
+      }
+
+      // Show More label
+      showMore.textContent = expanded ? "Show Less" : "Show More...";
+
+      // count
+      countEl.textContent = selectedCount();
+    }
+
+    // ---------- Page 1 validation ----------
+    document.getElementById("next1").addEventListener("click", () => {
+      clearError(err1);
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+
+      const gender = document.querySelector('input[name="gender"]:checked')?.value || "";
+      const age = document.querySelector('input[name="age"]:checked')?.value || "";
+
+      if (!email || !email.includes("@")){
+        showError(err1, "Please enter a valid email address.");
+        return;
+      }
+      if (!password || password.length < 6){
+        showError(err1, "Please enter a password (6+ characters).");
+        return;
+      }
+      if (!gender){
+        showError(err1, "Please select Gender (M or F).");
+        return;
+      }
+      if (!age){
+        showError(err1, "Please select an Age range.");
+        return;
+      }
+
+      goTo(page2);
+      renderGenres();
+    });
+
+    // ---------- Page 2 ----------
+    document.getElementById("back2").addEventListener("click", () => goTo(page1));
+    document.getElementById("next2").addEventListener("click", () => {
+      clearError(err2);
+      if (selectedCount() < 3){
+        showError(err2, "Please select at least 3 Likes or Dislikes to continue.");
+        return;
+      }
+      goTo(page4);
+    });
+
+    showMore.addEventListener("click", () => {
+      expanded = !expanded;
+      renderGenres();
+    });
+
+    // ---------- Page 4 (Tolerance) ----------
+    function syncToleranceUI(){
+      document.querySelectorAll(".radioItem").forEach(el => {
+        el.classList.toggle("on", el.dataset.value === tolerance);
+      });
+    }
+
+    document.querySelectorAll(".radioItem").forEach(el => {
+      el.addEventListener("click", () => {
+        tolerance = el.dataset.value;
+        clearError(err4);
+        syncToleranceUI();
+      });
+    });
+
+    document.getElementById("back4").addEventListener("click", () => goTo(page2));
+
+    document.getElementById("finish").addEventListener("click", () => {
+      clearError(err4);
+      if (!tolerance){
+        showError(err4, "Please choose Low, Medium, or High.");
+        return;
+      }
+
+      // Optional: save to localStorage (so you can read later)
+      const payload = {
+        email: document.getElementById("email").value.trim(),
+        gender: document.querySelector('input[name="gender"]:checked')?.value || "",
+        age: document.querySelector('input[name="age"]:checked')?.value || "",
+        likes: [...state.entries()].filter(([_,v]) => v === 1).map(([k]) => k),
+        dislikes: [...state.entries()].filter(([_,v]) => v === -1).map(([k]) => k),
+        tolerance
+      };
+      try{
+        localStorage.setItem("mystreme_onboarding_v1", JSON.stringify(payload));
+      }catch(e){ /* ignore */ }
+
+      goTo(page5);
+    });
+
+    // ---------- Page 5 buttons ----------
+    document.getElementById("launch").addEventListener("click", () => {
+      window.location.href = "https://mystreme.netlify.app";
+    });
+    document.getElementById("tour").addEventListener("click", () => {
+      // placeholder route (update when tour exists)
+      window.location.href = "https://mystreme.netlify.app/tour";
+    });
+
+    // ---------- Init ----------
+    goTo(page1);
+  </script>
+</body>
+</html>
